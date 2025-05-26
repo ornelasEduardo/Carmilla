@@ -15,7 +15,7 @@ class Carmilla(discord.Client):
         if message.author == self.user:
             return
 
-        if message.content == 'ping':
+        if message.content.lower() == 'ping':
             await message.channel.send('pong')
 
 intents = discord.Intents.default()
