@@ -1,0 +1,17 @@
+[project]
+name = "carmilla"
+version = "0.1.0"
+description = "Discord bot for everything gaming, tech and anime related"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "discord-py>=2.5.2",
+    "pyrefly>=0.17.0",
+    "python-dotenv>=1.1.0",
+]
+[tool.pyrefly]
+project_includes = ["**/*"]
+project_excludes = [
+    "**/.[!/.]*",
+    "**/*venv/**/*",
+]
