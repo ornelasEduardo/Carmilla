@@ -6,8 +6,10 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "discord-py>=2.5.2",
+    "html2text>=2025.4.15",
     "pyrefly>=0.17.0",
     "python-dotenv>=1.1.0",
+    "requests>=2.32.3",
 ]
 [tool.pyrefly]
 project_includes = ["**/*"]
