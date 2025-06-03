@@ -51,6 +51,16 @@ class AnimeCog(commands.Cog):
     
     return [name_to_use, short_desc, airing_day, episodes, genres, status, start_date_string, end_date_string]
 
+  def generateFieldValue(self, airing_day, episodes, genres: list[str], status, start_date, end_date, description, site_url) -> str:
+    airing_str: str = f"🗓️ **Airs:** {airing_day if airing_day else ''}"
+    episodes_str: str = f"🎬 **Episodes:** {episodes if episodes else ''}"
+    genres_str: str = f"🎭 **Genres:** {','.join(genres)}"
+    status_str: str = f"📝 **Status:** {status}"
+    airing_from_str: str = f"📅 **From:** {start_date} {f"→ {end_date}" if end_date else ''}"
+    description_str: str = f"🧾 **Description:** {description}"
+    site_url_str: str = f"🔗 [See more]({site_url})"
+    
+    return '\n\n'.join([airing_str, episodes_str, genres_str, status_str, airing_from_str, description_str, site_url_str])
 
   @app_commands.command(name="anime", description="Gets a feed of the requested category")
   @app_commands.describe(season="Which season do you want? (fall, winter...)")
@@ -60,7 +70,7 @@ class AnimeCog(commands.Cog):
     data: dict = AniListQuery().getAnimeSeason(season, current_year)
 
     embed: Embed = Embed(
-        title=f"{sentence_case_season} 2025 Anime Season",
+        title=f"{sentence_case_season} {current_year} Anime Season",
         color=Color.red()
     )
 
@@ -79,16 +89,19 @@ class AnimeCog(commands.Cog):
         end_date_string
       ] = self.parseAnime(anime)
       
-      field_value: str=f'''
-        🗓️ **Airs:** {f"{airing_day}\n" if airing_day else "\n"}
-        🎬 **Episodes:** {f"{episodes}\n" if episodes else "\n"}
-        🎭 **Genres:** {", ".join(anime.genres)}\n
-        📝 **Status:** {anime.status}\n
-        📅 **From:** {start_date_string} {f"→ {end_date_string}" if end_date_string else ""}\n
-        🧾 **Description:** {short_desc}\n
-        🔗 [See more]({anime.siteUrl})
-        {"______" if index != len(media) - 1 else ""}
-      '''
+      field_value: str = self.generateFieldValue(
+        airing_day,
+        episodes,
+        anime.genres,
+        anime.status,
+        start_date_string,
+        end_date_string,
+        short_desc,
+        anime.siteUrl
+      )
+      
+      if index != len(media) - 1:
+        field_value += "\n\n~~▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬~~"
 
       embed.add_field(
         name=name_to_use,
